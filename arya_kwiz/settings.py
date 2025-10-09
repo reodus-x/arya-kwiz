@@ -23,10 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-kn$(2f89y8q4ek0we*&d7k28mvvu3v7pd6y-9qce0dpa@(pl-k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+DEBUG = False  # for production
+ALLOWED_HOSTS = ['arya.reodus.dev', 'arya-kwiz.reodus.dev']
 
 # Application definition
 
