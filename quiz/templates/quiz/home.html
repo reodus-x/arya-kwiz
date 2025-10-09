@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Arya-Kwiz 🦋</title>
+  <style>
+    body { font-family: 'Comic Sans MS', sans-serif; background: #f3e5f5; color: #4a148c; padding: 20px; }
+    .question { margin-bottom: 15px; }
+    input[type=text] { padding: 5px; border-radius: 8px; border: 1px solid #ccc; }
+    button { background: #ab47bc; color: white; padding: 8px 15px; border: none; border-radius: 10px; cursor: pointer; }
+    button:hover { background: #8e24aa; }
+  </style>
+</head>
+<body>
+  <h1>🦋 Arya-Kwiz 🦋</h1>
+  <form method="POST">
+    {% csrf_token %}
+    {% for q in questions %}
+      <div class="question">
+        <label>{{ q.question_text }}</label><br>
+        <input type="text" name="{{ q.id }}" required>
+      </div>
+    {% endfor %}
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>
