@@ -124,8 +124,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 import os
 import dj_database_url
 
-DEBUG = False
-ALLOWED_HOSTS = ['arya-kwiz.onrender.com', 'reodus.dev', 'arya-kwiz.reodus.dev']
+DEBUG = True
+ALLOWED_HOSTS = ['*']
 
 DATABASES = {
     'default': dj_database_url.config(default='sqlite:///db.sqlite3')
