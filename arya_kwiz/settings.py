@@ -121,3 +121,16 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Added 10.9.25 as per consultant
+import os
+import dj_database_url
+
+DEBUG = False
+ALLOWED_HOSTS = ['arya-kwiz.onrender.com', 'reodus.dev', 'arya-kwiz.reodus.dev']
+
+DATABASES = {
+    'default': dj_database_url.config(default='sqlite:///db.sqlite3')
+}
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
