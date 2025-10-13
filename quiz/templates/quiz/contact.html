@@ -1,23 +1,65 @@
-{% extends 'quiz/base.html' %}
-{% block title %}Contact Us - Arya-Kwiz{% endblock %}
+{% extends "quiz/base.html" %}
+{% block title %}Contact Us{% endblock %}
+
 {% block content %}
-<h2>Contact Us</h2>
+<div class="contact-container">
+  <h2>📬 Contact Us</h2>
 
-{% if sent %}
-  <p>✅ Your message has been sent successfully! Thank you!</p>
-{% else %}
-  <form method="POST">
-    {% csrf_token %}
-    <label>Name:</label><br>
-    <input type="text" name="name" required><br><br>
+  {% if success %}
+    <p class="success">✅ Your message was sent successfully! Thank you.</p>
+  {% else %}
+    <form method="post">
+      {% csrf_token %}
+      <label for="name">Name:</label><br>
+      <input type="text" name="name" required><br>
 
-    <label>Email:</label><br>
-    <input type="email" name="email" required><br><br>
+      <label for="email">Email:</label><br>
+      <input type="email" name="email" required><br>
 
-    <label>Message:</label><br>
-    <textarea name="message" rows="5" cols="40" required></textarea><br><br>
+      <label for="message">Message:</label><br>
+      <textarea name="message" rows="5" required></textarea><br>
 
-    <button type="submit">Send Message</button>
-  </form>
-{% endif %}
+      <button type="submit">Send</button>
+    </form>
+  {% endif %}
+</div>
 {% endblock %}
+
+<style>
+.contact-container {
+  max-width: 600px;
+  margin: 100px auto 120px auto;
+  background-color: rgba(255,255,255,0.8);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  text-align: left;
+}
+
+label {
+  font-weight: bold;
+  color: #4a148c;
+}
+
+input, textarea {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #aaa;
+}
+
+button {
+  background-color: #6a1b9a;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #4a148c;
+}
+</style>
+

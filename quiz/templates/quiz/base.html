@@ -4,15 +4,40 @@
   {% load static %}
   <title>{% block title %}Arya-Kwiz 🦋{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'quiz/style.css' %}">
+  <style>
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      padding: 8px;
+      background-color: rgba(255, 255, 255, 0.7);
+      color: #4a148c;
+      font-size: 0.9em;
+      border-top: 1px solid #ddd;
+    }
+
+    body {
+      margin: 0;
+      padding-bottom: 60px; /* ensures footer doesn’t overlap content */
+      font-family: Arial, sans-serif;
+    }
+
+    .content {
+      padding: 20px;
+    }
+  </style>
 </head>
+
 <body>
   <div class="content">
     {% block content %}{% endblock %}
   </div>
 
   <footer>
-    <p>Powered by: <b>reodus / argon</b></p>
-    <p><a href="{% url 'contact' %}">Contact Us</a></p>
+    Powered by: <b>reodus / argon</b> |
+    Contact: <a href="mailto:argon@reodus.dev">argon@reodus.dev</a>
   </footer>
 </body>
 </html>

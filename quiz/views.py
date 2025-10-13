@@ -1,73 +1,85 @@
-from django.shortcuts import render, redirect
-from django.core.mail import send_mail
-from django.conf import settings
+from django.shortcuts import render
 import random
 
-# --- 1️⃣ Quiz Questions Stored as a List of Dictionaries ---
 QUESTIONS = [
     {
-        "question": "What is the capital of France?",
-        "options": ["Berlin", "Madrid", "Paris", "Rome"],
-        "answer": "Paris"
+        "question": "What is the capital of Japan?",
+        "options": ["Seoul", "Beijing", "Tokyo", "Kyoto"],
+        "answer": "Tokyo",
+    },
+    {
+        "question": "Which element has the chemical symbol 'O'?",
+        "options": ["Oxygen", "Gold", "Osmium", "Oganesson"],
+        "answer": "Oxygen",
+    },
+    {
+        "question": "Who created Python programming language?",
+        "options": ["Elon Musk", "Guido van Rossum", "Bill Gates", "James Gosling"],
+        "answer": "Guido van Rossum",
+    },
+    {
+        "question": "What year did World War II end?",
+        "options": ["1945", "1939", "1918", "1963"],
+        "answer": "1945",
     },
     {
         "question": "Which planet is known as the Red Planet?",
-        "options": ["Earth", "Mars", "Jupiter", "Venus"],
-        "answer": "Mars"
-    },
-    {
-        "question": "What is 5 × 6?",
-        "options": ["30", "11", "56", "26"],
-        "answer": "30"
-    },
-    {
-        "question": "Who painted the Mona Lisa?",
-        "options": ["Picasso", "Da Vinci", "Van Gogh", "Rembrandt"],
-        "answer": "Da Vinci"
+        "options": ["Earth", "Venus", "Mars", "Jupiter"],
+        "answer": "Mars",
     },
 ]
 
-# --- 2️⃣ Home Page: Show Randomized MCQ Questions ---
-def home(request):
+def quiz_view(request):
+    # Always reshuffle questions and options
+    shuffled_questions = []
+    for q in QUESTIONS:
+        opts = q["options"].copy()
+        random.shuffle(opts)
+        shuffled_questions.append({
+            "question": q["question"],
+            "options": opts,
+            "answer": q["answer"]
+        })
+    random.shuffle(shuffled_questions)
+
     if request.method == "POST":
         score = 0
         results = []
-        for i, q in enumerate(QUESTIONS):
-            selected = request.POST.get(f"q{i}")
-            correct = (selected == q["answer"])
-            if correct:
+        for idx, q in enumerate(shuffled_questions):
+            selected = request.POST.get(f"question_{idx+1}")
+            correct = q["answer"]
+            is_correct = selected == correct
+            if is_correct:
                 score += 1
             results.append({
                 "question": q["question"],
                 "selected": selected,
-                "correct_answer": q["answer"],
-                "is_correct": correct
+                "correct": correct,
+                "is_correct": is_correct,
             })
         return render(request, "quiz/result.html", {
             "score": score,
-            "total": len(QUESTIONS),
-            "results": results
+            "total": len(shuffled_questions),
+            "results": results,
         })
-    else:
-        shuffled_questions = random.sample(QUESTIONS, len(QUESTIONS))
-        for q in shuffled_questions:
-            q["options"] = random.sample(q["options"], len(q["options"]))
-        return render(request, "quiz/home.html", {"questions": shuffled_questions})
 
+    return render(request, "quiz/quiz.html", {"questions": shuffled_questions})
 
-# --- 3️⃣ Contact Us Page ---
+# ----------------------------
+# Contact Us Page
+# ----------------------------
+from django.shortcuts import render
+
 def contact(request):
     if request.method == "POST":
         name = request.POST.get("name")
         email = request.POST.get("email")
         message = request.POST.get("message")
 
-        send_mail(
-            subject=f"Contact from {name}",
-            message=f"Email: {email}\n\nMessage:\n{message}",
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=["argon@reodus.dev"],
-        )
-        return render(request, "quiz/contact.html", {"sent": True})
+        # (Optional) print in console to verify form submissions
+        print(f"📩 Contact form received from {name} ({email}): {message}")
+
+        return render(request, "quiz/contact.html", {"success": True})
+
     return render(request, "quiz/contact.html")
 
