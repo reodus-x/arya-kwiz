@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% load static %}
+  <title>{% block title %}Arya-Kwiz 🦋{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'quiz/style.css' %}">
+</head>
+<body>
+  <div class="content">
+    {% block content %}{% endblock %}
+  </div>
+
+  <footer>
+    <p>Powered by: <b>reodus / argon</b></p>
+    <p><a href="{% url 'contact' %}">Contact Us</a></p>
+  </footer>
+</body>
+</html>
+

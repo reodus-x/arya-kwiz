@@ -1,0 +1,23 @@
+{% extends 'quiz/base.html' %}
+{% block title %}Contact Us - Arya-Kwiz{% endblock %}
+{% block content %}
+<h2>Contact Us</h2>
+
+{% if sent %}
+  <p>✅ Your message has been sent successfully! Thank you!</p>
+{% else %}
+  <form method="POST">
+    {% csrf_token %}
+    <label>Name:</label><br>
+    <input type="text" name="name" required><br><br>
+
+    <label>Email:</label><br>
+    <input type="email" name="email" required><br><br>
+
+    <label>Message:</label><br>
+    <textarea name="message" rows="5" cols="40" required></textarea><br><br>
+
+    <button type="submit">Send Message</button>
+  </form>
+{% endif %}
+{% endblock %}
