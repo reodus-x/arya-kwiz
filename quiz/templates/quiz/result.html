@@ -1,5 +1,4 @@
 {% extends "quiz/base.html" %}
-
 {% block content %}
 <h2>🌸 Great job, Arya! 🌸</h2>
 <p>You scored {{ score }} out of {{ total }}!</p>
@@ -15,9 +14,11 @@
       {% else %}
         ❌ <b>{{ r.selected }}</b> (Correct: {{ r.correct }})
       {% endif %}
-    </li><br>
+    </li>
+    <br>
   {% endfor %}
 </ul>
-<a href="/">Try again</a>
+
+<p><a href="/?new=1">Try again !</a></p>
 {% endblock %}
 

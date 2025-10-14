@@ -11,3 +11,4 @@ db.sqlite3
 
 # Secrets
 .env
+db.sqlite3
