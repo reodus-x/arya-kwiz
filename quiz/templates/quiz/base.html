@@ -1,12 +1,13 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>{% block title %}Arya-Kwiz 🦋{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'quiz/style.css' %}">
   <style>
     body {
-      background-image: url("{% static 'img/shinobu-kocho.png' %}");
+      background-image: url("{% static 'quiz/img/shinobu-kocho.png' %}");
       background-size: cover;
       background-repeat: no-repeat;
       background-attachment: fixed;
@@ -14,7 +15,6 @@
       position: relative;
     }
 
-    /* Purple overlay (30% transparency) */
     body::before {
       content: "";
       position: fixed;
