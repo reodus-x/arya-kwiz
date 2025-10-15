@@ -64,9 +64,9 @@ DATABASES = {
 }
 
 # Static files
-STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]  # Your local static files folder
+STATIC_ROOT = BASE_DIR / "staticfiles"    # Where collectstatic will put them
 
 # Media files
 MEDIA_URL = "/media/"
