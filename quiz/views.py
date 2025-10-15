@@ -1,4 +1,3 @@
-# quiz/views.py
 from django.shortcuts import render
 from .models import Question
 import random
@@ -6,37 +5,34 @@ import random
 def build_quiz_data_from_db():
     quiz_data = []
     questions = list(Question.objects.all())
-    random.shuffle(questions)  # shuffle questions first
+    random.shuffle(questions)  # randomize question order
 
     for q in questions:
-        # Gather only non-empty options
-        opts = [q.option_a, q.option_b, q.option_c, q.option_d]
-        opts = [o for o in opts if o and o.strip()]
+        # collect non-empty options
+        options = [q.option_a, q.option_b, q.option_c, q.option_d]
+        options = [opt.strip() for opt in options if opt and opt.strip()]
 
-        # Get the correct answer text
+        # identify correct answer text
         correct_val = q.correct_value()
 
-        # Ensure the correct answer is in the list
-        if correct_val not in opts:
-            opts.append(correct_val)
+        # ensure correct answer exists in options
+        if correct_val and correct_val not in options:
+            options.append(correct_val)
 
-        # Shuffle the options
-        shuffled_opts = opts.copy()
-        random.shuffle(shuffled_opts)
+        # shuffle options while keeping correct_val reference
+        random.shuffle(options)
 
-        # Build structured quiz data
         quiz_data.append({
             "id": q.id,
-            "question": q.question_text,
-            "options": shuffled_opts,
-            "correct": correct_val,  # Store the correct *value*
+            "question": q.question_text.strip(),
+            "options": options,
+            "correct": correct_val.strip() if correct_val else "",
         })
-
     return quiz_data
 
 
 def quiz_view(request):
-    # New quiz or reshuffle request
+    # rebuild quiz on first load or reshuffle request
     if "quiz_data" not in request.session or request.GET.get("new") == "1":
         request.session["quiz_data"] = build_quiz_data_from_db()
         request.session.modified = True
@@ -51,7 +47,8 @@ def quiz_view(request):
             selected = request.POST.get(f"question_{idx}")
             correct = q.get("correct")
 
-            is_correct = (selected == correct)
+            # compare as strings (avoid type mismatch)
+            is_correct = (str(selected).strip() == str(correct).strip())
             if is_correct:
                 score += 1
 
@@ -63,7 +60,7 @@ def quiz_view(request):
                 "is_correct": is_correct,
             })
 
-        # clear quiz_data to reshuffle on next try
+        # clear quiz for next reshuffle
         if "quiz_data" in request.session:
             del request.session["quiz_data"]
 
