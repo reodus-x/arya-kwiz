@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="{% static 'quiz/style.css' %}">
   <style>
     body {
+      /* Correct path: app name 'quiz' + folder 'img' */
       background-image: url("{% static 'quiz/img/shinobu-kocho.png' %}");
       background-size: cover;
       background-repeat: no-repeat;
@@ -15,6 +16,7 @@
       position: relative;
     }
 
+    /* Overlay */
     body::before {
       content: "";
       position: fixed;

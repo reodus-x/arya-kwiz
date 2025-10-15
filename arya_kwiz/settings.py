@@ -3,17 +3,21 @@ from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
 
-# Load environment variables
+# Load environment variables from .env
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# ======================
 # SECURITY
+# ======================
 SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-temp-key")
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
+# ======================
 # APPLICATIONS
+# ======================
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -24,10 +28,12 @@ INSTALLED_APPS = [
     "quiz",
 ]
 
+# ======================
 # MIDDLEWARE
+# ======================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # <-- Add WhiteNoise
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # serve static files in production
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -38,12 +44,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "arya_kwiz.urls"
 
+# ======================
 # TEMPLATES
+# ======================
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
-        "APP_DIRS": True,
+        "DIRS": [BASE_DIR / "templates"],  # project-level templates
+        "APP_DIRS": True,  # allow app-level templates
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -57,7 +65,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "arya_kwiz.wsgi.application"
 
+# ======================
 # DATABASE
+# ======================
 DATABASES = {
     "default": dj_database_url.config(
         default=os.getenv("DATABASE_URL"),
@@ -66,24 +76,36 @@ DATABASES = {
     )
 }
 
+# ======================
 # STATIC FILES
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+# ======================
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# Use WhiteNoise storage backend for compressed static files
+# Only point to your app's static folder to avoid duplicates
+STATICFILES_DIRS = [
+    BASE_DIR / "quiz" / "static",
+]
+
+# WhiteNoise storage for caching and compression
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+# ======================
 # MEDIA FILES
+# ======================
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# ======================
 # LOCALIZATION
+# ======================
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "America/Toronto"
 USE_I18N = True
 USE_TZ = True
 
+# ======================
 # DEFAULT AUTO FIELD
+# ======================
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
