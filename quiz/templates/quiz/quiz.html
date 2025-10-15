@@ -1,31 +1,27 @@
 {% extends "quiz/base.html" %}
-{% load static %}
-
-{% block title %}Arya-Kwiz 🦋 Quiz{% endblock %}
-
+{% block title %}Arya-Kwiz 🦋{% endblock %}
 {% block content %}
-<div class="quiz-container">
-  <h2>🦋 Arya-Kwiz</h2>
-  <form method="post">
-    {% csrf_token %}
-    {% for q in questions %}
-      <div class="question-block">
-        <p class="question"><b>{{ forloop.counter }}.</b> {{ q.question }}</p>
-        <div class="options">
-          {% for opt in q.options %}
-            <label>
-              <input type="radio" name="question_{{ forloop.parentloop.counter0 }}" value="{{ opt }}" required>
-              {{ opt }}
-            </label><br>
-          {% endfor %}
-        </div>
-      </div>
-    {% endfor %}
-    <button type="submit" class="submit-btn">Submit</button>
-  </form>
-  <p style="text-align:left;margin-top:10px;">
-    <a href="?new=1">Try again !</a>
-  </p>
-</div>
+
+<h1>🦋 Welcome to Arya-Kwiz!</h1>
+<form method="post">
+  {% csrf_token %}
+  
+  {% for q in questions %}
+    <div class="question-block">
+      <h3>{{ forloop.counter }}. {{ q.question }}</h3>
+
+      {% for opt in q.options %}
+        <label>
+          <input type="radio" name="question_{{ q.id }}" value="{{ opt }}">
+          {{ opt }}
+        </label><br>
+      {% endfor %}
+    </div>
+    <br>
+  {% endfor %}
+
+  <button type="submit" class="btn">Submit</button>
+</form>
+
 {% endblock %}
 

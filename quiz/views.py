@@ -4,71 +4,66 @@ import random
 
 def build_quiz_data_from_db():
     quiz_data = []
-    questions = list(Question.objects.all())
-    random.shuffle(questions)  # randomize question order
+    for q in Question.objects.all():
+        opts = [q.option_a, q.option_b, q.option_c, q.option_d]
+        opts = [o.strip() for o in opts if o and o.strip()]
+        correct_val = q.correct_value().strip() if q.correct_value() else ""
 
-    for q in questions:
-        # collect non-empty options
-        options = [q.option_a, q.option_b, q.option_c, q.option_d]
-        options = [opt.strip() for opt in options if opt and opt.strip()]
+        if correct_val and correct_val not in opts:
+            opts.append(correct_val)
 
-        # identify correct answer text
-        correct_val = q.correct_value()
-
-        # ensure correct answer exists in options
-        if correct_val and correct_val not in options:
-            options.append(correct_val)
-
-        # shuffle options while keeping correct_val reference
-        random.shuffle(options)
+        random.shuffle(opts)
 
         quiz_data.append({
             "id": q.id,
-            "question": q.question_text.strip(),
-            "options": options,
-            "correct": correct_val.strip() if correct_val else "",
+            "question": q.question_text,
+            "options": opts,
+            "correct": correct_val,
         })
+
+    random.shuffle(quiz_data)
     return quiz_data
 
-
 def quiz_view(request):
-    # rebuild quiz on first load or reshuffle request
-    if "quiz_data" not in request.session or request.GET.get("new") == "1":
+    # Reset quiz only if user explicitly clicks "Try Again"
+    if request.GET.get("new") == "1":
+        request.session.pop("quiz_data", None)
+
+    # Build quiz only once per session
+    if "quiz_data" not in request.session:
         request.session["quiz_data"] = build_quiz_data_from_db()
         request.session.modified = True
 
-    quiz_data = request.session.get("quiz_data", [])
+    quiz_data = request.session["quiz_data"]
 
+    # Handle submission
     if request.method == "POST":
         score = 0
         results = []
 
-        for idx, q in enumerate(quiz_data):
-            selected = request.POST.get(f"question_{idx}")
+        for q in quiz_data:
+            selected = request.POST.get(f"question_{q['id']}")
             correct = q.get("correct")
-
-            # compare as strings (avoid type mismatch)
-            is_correct = (str(selected).strip() == str(correct).strip())
+            is_correct = (selected == correct)
             if is_correct:
                 score += 1
 
             results.append({
                 "question": q.get("question"),
-                "options": q.get("options"),
                 "selected": selected,
                 "correct": correct,
                 "is_correct": is_correct,
+                "options": q.get("options"),
             })
 
-        # clear quiz for next reshuffle
-        if "quiz_data" in request.session:
-            del request.session["quiz_data"]
-
-        return render(request, "quiz/result.html", {
+        # Delete quiz data AFTER rendering results
+        response = render(request, "quiz/result.html", {
             "score": score,
             "total": len(quiz_data),
             "results": results,
         })
+        del request.session["quiz_data"]
+        return response
 
     return render(request, "quiz/quiz.html", {"questions": quiz_data})
 
